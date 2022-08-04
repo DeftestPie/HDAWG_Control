@@ -7,6 +7,11 @@ import tkinter
 from tkinter.filedialog import askopenfilename
 import csv
 
+# Create root window
+root_window = tkinter.Tk()
+# Path
+path = tkinter.StringVar()
+
 
 # Functions definition
 
@@ -28,6 +33,7 @@ def read_and_create_wave():
 
 def run_example(device_id, server_host: str = "localhost", server_port: int = 8004):
     csv_path = getPath()
+    print(csv_path)
     with open(csv_path) as file_name:
         array = np.loadtxt(file_name, delimiter=",")
 
@@ -183,36 +189,35 @@ def getPath():
     return path.get()
 
 
-# Create root window
-root_window = tkinter.Tk()
-# Title root window
-root_window.title('HD Arbitrary Waveform Generator Controller')
-# Set window size
-root_window.geometry('800x450')
 
-# Path
-path = tkinter.StringVar()
-# Label path selection
-tkinter.Label(root_window, text="Target file directory:").grid(row=0, column=0)
-# Path entry display
-tkinter.Entry(root_window, textvariable=path).grid(row=0, column=1)
-# Set select file button
-tkinter.Button(root_window, text="Choose file", command=selectPath).grid(row=0, column=2)
+def setupGUI():
+    # Title root window
+    root_window.title('HD Arbitrary Waveform Generator Controller')
+    # Set window size
+    root_window.geometry('800x450')
+    # Label path selection
+    tkinter.Label(root_window, text="Target file directory:").grid(row=0, column=0)
+    # Path entry display
+    tkinter.Entry(root_window, textvariable=path).grid(row=0, column=1)
+    # Set select file button
+    tkinter.Button(root_window, text="Choose file", command=selectPath).grid(row=0, column=2)
 
-# Set exit button
-button_exit = tkinter.Button(root_window, text="Exit program", command=root_window.quit).grid(row = 1, column = 0)
-# Place exit button
-#button_exit.pack(side="bottom")
+    # Set exit button
+    button_exit = tkinter.Button(root_window, text="Exit program", command=root_window.quit).grid(row=1, column=0)
+    # Place exit button
+    # button_exit.pack(side="bottom")
 
-# Set waveform generation button
-tkinter.Button(root_window, text='Generate waveform', command=read_and_create_wave()).grid(row = 1, column = 2)
+    # Set waveform generation button
+    tkinter.Button(root_window, text='Generate waveform', command=read_and_create_wave()).grid(row=1, column=2)
 
-# Debug buttons
-button_path_test = tkinter.Button(root_window, text="Print path", command=printPath).grid(row = 1, column = 1)
+    # Debug buttons
+    button_path_test = tkinter.Button(root_window, text="Print path", command=printPath).grid(row=1, column=1)
+
 
 if __name__ == "__main__":
     import sys
     from pathlib import Path
 
+    setupGUI
     # Loop root window
     root_window.mainloop()
