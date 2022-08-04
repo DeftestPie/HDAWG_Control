@@ -2,11 +2,6 @@
 ## Fall 2021
 ## File: ReadandCreateWave.py
 
-## Edited by Yang Xiang
-## Summer 2022
-## File: ReadandCreateWave_03.py
-## Modification: Added GUI
-
 
 """
 Zurich Instruments LabOne Python API Example
@@ -39,19 +34,13 @@ import time
 import textwrap
 import numpy as np
 import zhinst.utils
-import tkinter
 from tkinter import filedialog as fd
 
 filename = fd.askopenfilename()
 import csv
+
 with open(filename, "r") as file_name:
     array = np.loadtxt(file_name, delimiter=",")
-
-
-# GUI setup
-def selectPath():
-    path_ = fd.askopenfilename(title='Please choose a file', initialdir='/', filetypes=[('CSV file', '*.csv')])
-    path.set(path_)
 
 
 def run_example(
@@ -269,29 +258,14 @@ def run_example(
         daq.setInt(f"/{device}/awgs/0/enable", 1)
 
 
+# if __name__ == "__main__":
+#     import sys
+#     from pathlib import Path
+#
+#     cli_util_path = Path(__file__).resolve().parent / "../../utils/python"
+#     sys.path.insert(0, str(cli_util_path))
+#     cli_utils = __import__("cli_utils")
+#     cli_utils.run_commandline(run_example, __doc__)
+#     sys.path.remove(str(cli_util_path))
 
-
-# Create root window
-root_window = tkinter.Tk()
-# Path
-path = tkinter.StringVar()
-# Title root window
-root_window.title('HD Arbitrary Waveform Generator Controller')
-# Set window size
-root_window.geometry('800x450')
-# Label path selection
-tkinter.Label(root_window, text="Target file directory:").grid(row=0, column=0)
-# Path entry display
-tkinter.Entry(root_window, textvariable=path).grid(row=0, column=1)
-# Set select file button
-tkinter.Button(root_window, text="Choose file", command=selectPath).grid(row=0, column=2)
-
-# Set exit button
-button_exit = tkinter.Button(root_window, text="Exit program", command=root_window.quit).grid(row=1, column=0)
-# Place exit button
-# button_exit.pack(side="bottom")
-deviceID = str(input("Please input device ID:"))
-# Set waveform generation button
-tkinter.Button(root_window, text='Generate waveform', command=run_example(deviceID, "localhost", 8004)).grid(row=1, column=2)
-
-root_window.mainloop()
+run_example("dev8259", "localhost", 8004)
