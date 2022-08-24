@@ -38,6 +38,8 @@ button_file.pack()
 def run_example(
         array,
         device_id,
+        s_rate: int,
+        f_wave: int = 20,
         server_host: str = "localhost",
         server_port: int = 8004,
 ):
@@ -69,13 +71,14 @@ def run_example(
     awg_channel = 0
     amplitude = 1.0
     range = 1.2
-    while True:
-        try:
-            timeScaleMultiplier = int(input("Enter sample rate from 1-12 ((100 MHz)/2^n): "))
-            break
-
-        except Exception:
-            print("Please enter an integer")
+    # Code below is replaced by s_rate(AKA sampling rate)
+    # while True:
+    #     try:
+    #         timeScaleMultiplier = int(input("Enter sample rate from 1-12 ((100 MHz)/2^n): "))
+    #         break
+    #
+    #     except Exception:
+    #         print("Please enter an integer")
 
     exp_setting = [
         ["/%s/sigouts/%d/on" % (device, out_channel), 1],
@@ -93,7 +96,7 @@ def run_example(
 
         ["/%s/awgs/0/outputs/0/modulation/mode" % device, 0],
         ["/%s/system/clocks/sampleclock/freq" % device, 100000000],
-        ["/%s/awgs/0/time" % device, timeScaleMultiplier],
+        ["/%s/awgs/0/time" % device, s_rate],
         ["/%s/awgs/0/userregs/0" % device, 0],
     ]
     daq.set(exp_setting)
@@ -134,15 +137,8 @@ def run_example(
 
     # Define an array of values that are used to write values for wave w0 to a CSV file in the
     # module's data directory
-    while True:
-        try:
-            firstwave = int(input("Column Index of first Wave: "))
-            break
 
-        except Exception:
-            print("Please enter an integer")
-
-    firstWave = 20
+    firstWave = f_wave
     waveform_1 = array[..., firstWave]
 
     waveform_2 = array[..., firstWave + 1]
@@ -305,7 +301,7 @@ def generateWave():
                 print("Generating wave from CSV file!")
                 with open(path.get(), "r") as file_name:
                     array = np.loadtxt(file_name, delimiter=",")
-                run_example(array, device_id, server_host, server_port)
+                run_example(array, device_id, 12, 20, server_host, server_port)
             else:
                 print("No CSV file is selected!")
 

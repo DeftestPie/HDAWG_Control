@@ -268,4 +268,4 @@ def run_example(
 #     cli_utils.run_commandline(run_example, __doc__)
 #     sys.path.remove(str(cli_util_path))
 
-run_example("dev8259", "localhost", 8004)
+#run_example("dev8259", "localhost", 8004)
