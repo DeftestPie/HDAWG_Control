@@ -7,11 +7,21 @@ import zhinst.utils
 import zhinst.ziPython as zi
 import tkinter
 import tkinter as tk
+#from PIL import ImageTK, Image
 from tkinter.filedialog import askopenfilename
 
 window = tk.Tk()
 window.title('HDAWG Controller')
 window.geometry('800x600')
+# canvas = tk.Canvas(window, width=400, height=300, bd=0, highlightthickness=0)
+# imgpath = 'in-the-lab-2003.gif'
+# img = Image.open(imgpath)
+# photo = ImageTK.PhotoImage(img)
+# canvas.create_image(400, 300, image=photo)
+# canvas.pack()
+bg = tk.PhotoImage(file="Doctor_Orlov.png")
+label1 = tk.Label(window, image=bg)
+label1.place(x=0, y=0)
 
 path = tkinter.StringVar()
 
@@ -39,7 +49,7 @@ button_file.pack()
 def run_example(
         array,
         device_id,
-        s_rate: int,
+        s_rate: int = 12,
         f_wave: int = 20,
         server_host: str = "localhost",
         server_port: int = 8004,
@@ -251,21 +261,33 @@ def run_example(
 s_host_input = tk.StringVar()
 s_port_input = tk.IntVar()
 d_id = tk.StringVar()
+s_rate_input = tk.IntVar()
+f_wave_input = tk.IntVar()
+
+s_rate_label = tk.Label(window, text="Sample rate from 1-12 ((100 MHz)/2^n): ")
+s_rate_label.place(x=50, y=360)
+sr_input = tk.Entry(window, textvariable=s_rate_input)
+sr_input.place(x=120, y=380)
+
+f_wave_label = tk.Label(window, text="Column Index of first Wave: ")
+f_wave_label.place(x=50, y=400)
+fw_input = tk.Entry(window, textvariable=f_wave_input)
+fw_input.place(x=120, y=420)
 
 s_host_label = tk.Label(window, text="Server Host: ")
-s_host_label.place(x=250, y=300)
+s_host_label.place(x=50, y=300)
 server_host_input = tk.Entry(window, textvariable=s_host_input)
-server_host_input.place(x=320, y=300)
+server_host_input.place(x=120, y=300)
 
 s_port_label = tk.Label(window, text="Server Port: ")
-s_port_label.place(x=250, y=320)
+s_port_label.place(x=50, y=320)
 server_port_input = tk.Entry(window, textvariable=s_port_input)
-server_port_input.place(x=320, y=320)
+server_port_input.place(x=120, y=320)
 
 d_id_label = tk.Label(window, text="Device ID: ")
-d_id_label.place(x=250, y=340)
+d_id_label.place(x=50, y=340)
 d_id_input = tk.Entry(window, textvariable=d_id)
-d_id_input.place(x=320, y=340)
+d_id_input.place(x=120, y=340)
 
 
 def createSine(device_id, server_host: str = "localhost", server_port: int = 8004,):
@@ -285,6 +307,8 @@ def generateWave():
     device_id = d_id.get()
     server_host = s_host_input.get()
     server_port = s_port_input.get()
+    sampling_rate = s_rate_input.get()
+    first_wave_column = f_wave_input.get()
     print("Device ID is: " + device_id)
     print("Server host is: " + server_host)
     print("Server port is: " + str(server_port))
@@ -302,7 +326,7 @@ def generateWave():
                 print("Generating wave from CSV file!")
                 with open(path.get(), "r") as file_name:
                     array = np.loadtxt(file_name, delimiter=",")
-                run_example(array, device_id, 12, 20, server_host, server_port)
+                run_example(array, device_id, sampling_rate, first_wave_column, server_host, server_port)
             else:
                 print("No CSV file is selected!")
 
